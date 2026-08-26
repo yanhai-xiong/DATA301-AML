@@ -1,6 +1,0 @@
-nbconvert==7.17.1
-jupyter-core
-ipykernel
-numpy
-pandas
-matplotlib
