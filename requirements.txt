@@ -4,3 +4,4 @@ jupyterlite-pyodide-kernel
 nbconvert
 jupyter
 sphinxcontrib-spelling # or any other sphinx plugins you use
+sphinx-slides
