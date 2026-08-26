@@ -6,7 +6,7 @@ root: index
 parts:
   - caption: Module 1 - Introduction, Probability, Monte Carlo Simulations
     chapters:
-      - file: Section 1.1 - Introduction.ipynb
+      - file: Module 1 - Introduction, Probability, Monte Carlo Simulations/Section 1.1 - Introduction.ipynb
       
   - caption: Module 2 - Advanced Topics
     chapters:
