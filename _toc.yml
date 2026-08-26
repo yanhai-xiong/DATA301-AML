@@ -4,7 +4,7 @@
 format: jb-book
 root: index
 parts:
-  - caption: Module 1 - Intro & Probabilities
+  - caption: "Module 1 - Intro & Probabilities"
     chapters:
       # Wrap the entire path with single quotes because of the spaces and comma
       - file: 'Module 1 - Introduction, Probability, Monte Carlo Simulations/Section 1.1 - Introduction'
