@@ -8,7 +8,3 @@ parts:
     chapters:
       - file: Module 1 - Introduction, Probability, Monte Carlo Simulations/Section 1.1 - Introduction.ipynb
       
-  - caption: Module 2 - Advanced Topics
-    chapters:
-      - file: Module 2 - Subfolder Name/01_notebook_name
-      - file: Module 2 - Subfolder Name/02_notebook_name
