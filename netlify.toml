@@ -1,4 +1,7 @@
 [build]
+  # Explicitly sets the build context to the root folder
+  base = ""
+  
   # Commands to install dependencies and compile the Jupyter Book into HTML
   command = "pip install -r requirements.txt && jupyter-book build ."
   
