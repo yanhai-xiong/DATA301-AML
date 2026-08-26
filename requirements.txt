@@ -1,9 +1,10 @@
-jupyter-book>=0.15.0,<2.0.0
-jupyterlite-core
-jupyterlite-pyodide-kernel
-nbconvert
-jupyter
-sphinxcontrib-spelling # or any other sphinx plugins you use
-sphinx>=7.0.0,<7.3.0
-sphinx-revealjs>=2.0.0,<3.0.0
-sphinx-multitoc-numbering==0.1.2
+# --- Core Documentation Engine ---
+jupyter-book>=2.0.0
+mystmd>=1.10.0
+
+# --- Your Notebook Execution Dependencies ---
+# (Add the packages your .ipynb code blocks actually import)
+numpy
+pandas
+matplotlib
+seaborn
