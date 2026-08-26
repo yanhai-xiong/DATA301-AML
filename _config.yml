@@ -14,7 +14,7 @@ sphinx:
   config:
     # This activates the built-in Sphinx extension for Reveal.js slides
     extensions:
-      - sphinx_slides
+      - sphinx-revealjs
 
 # 1. Provide the exact path to your public GitHub repo
 repository:
