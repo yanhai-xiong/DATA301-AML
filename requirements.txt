@@ -1,0 +1,5 @@
+jupyter-book
+jupyterlite-core
+jupyterlite-pyodide-kernel
+nbconvert
+jupyter
