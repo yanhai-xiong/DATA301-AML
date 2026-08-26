@@ -4,15 +4,15 @@ project:
   description: "Course lectures, notes, and presentation slides."
   authors:
     - name: "Your Name"
+  toc: # https://mystmd.org/guide/table-of-contents
+    - file: index.md
+    - title: "Module 1 - Intro & Probabilities"
+      children:
+        - file: "Module 1 - Introduction, Probability, Monte Carlo Simulations/Section 1.1 - Introduction.ipynb"
+
 
 site:
   template: book-theme
   options:
     number_sections: true
     repository: https://github.com/yanhai-xiong/DATA301-AML
-
-toc:
-  - file: index.md
-  - title: "Module 1 - Intro & Probabilities"
-    sections:
-      - file: "Module 1 - Introduction, Probability, Monte Carlo Simulations/Section 1.1 - Introduction.ipynb"
