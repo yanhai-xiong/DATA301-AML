@@ -5,3 +5,13 @@ author: "Course Instructor"
 # Execution settings
 execute:
   execute_notebooks: "off"  # Crucial for Netlify to skip heavy ML training during build
+
+html:
+  use_repository_button: true
+  use_issues_button: true
+  
+sphinx:
+  config:
+    # This activates the built-in Sphinx extension for Reveal.js slides
+    extensions:
+      - sphinx_slides
