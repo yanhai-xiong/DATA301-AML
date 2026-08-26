@@ -1,6 +1,7 @@
-# Course Configuration
-title: My AML Course Materials
-author: Your Name
-# logo: logo.png # Optional
+# Book settings
+title: "Advanced Machine Learning"
+author: "Course Instructor"
+
+# Execution settings
 execute:
-  execute_notebooks: "off"
+  execute_notebooks: "off"  # Crucial for Netlify to skip heavy ML training during build
