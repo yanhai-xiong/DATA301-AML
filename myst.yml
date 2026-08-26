@@ -1,0 +1,24 @@
+version: 1
+project:
+  title: "Data Science 301"
+  description: "Course lectures, notes, and presentation slides."
+  authors:
+    - name: "Your Name"
+
+site:
+  template: book-theme
+  options:
+    # Replaces your legacy table of contents numbering extension natively
+    number_sections: true
+    # Adds repository link shortcuts for your users
+    repository: https://github.com/yanhai-xiong/DATA301-AML
+
+# Organizing your pages and subfolder slide presentations side-by-side
+toc:
+  # The home page of your entire site
+  - file: index.md
+
+  # Section 1: Standard Book Pages
+  - title: "Module 1 - Intro & Probabilities"
+    sections:
+      - file: 'Module 1 - Introduction, Probability, Monte Carlo Simulations/Section 1.1 - Introduction'

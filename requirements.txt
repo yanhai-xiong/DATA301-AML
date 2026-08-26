@@ -6,3 +6,4 @@ jupyter
 sphinxcontrib-spelling # or any other sphinx plugins you use
 sphinx>=7.0.0,<7.3.0
 sphinx-revealjs>=2.0.0,<3.0.0
+sphinx-multitoc-numbering==0.1.2
