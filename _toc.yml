@@ -1,0 +1,15 @@
+# Table of contents
+# Learn more at https://jupyterbook.org
+
+format: jb-book
+root: index
+parts:
+  - caption: Module 1 - Intro & Probabilities
+    chapters:
+      - file: Module 1 - Introduction, Probability, Monte Carlo Simulations/01_introduction
+      - file: Module 1 - Introduction, Probability, Monte Carlo Simulations/02_monte_carlo
+      
+  - caption: Module 2 - Advanced Topics
+    chapters:
+      - file: Module 2 - Subfolder Name/01_notebook_name
+      - file: Module 2 - Subfolder Name/02_notebook_name
