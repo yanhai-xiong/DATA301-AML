@@ -1,0 +1,196 @@
+/* Overall presentation */
+:root {
+  --primary: #183153;
+  --accent: #2774ae;
+  --light-accent: #eaf3fa;
+  --text: #20242a;
+  --muted: #667085;
+}
+
+.reveal {
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+}
+
+/* Keep normal content left-aligned */
+.reveal .slides section {
+  box-sizing: border-box;
+  padding: 34px 48px;
+  text-align: left;
+}
+
+/* Headings */
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  color: var(--primary);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  text-transform: none;
+}
+
+.reveal h1 {
+  margin-bottom: 0.55em;
+  font-size: 2.15em;
+}
+
+.reveal h2 {
+  padding-bottom: 0.18em;
+  border-bottom: 3px solid var(--accent);
+  margin-bottom: 0.65em;
+  font-size: 1.65em;
+}
+
+.reveal h3 {
+  margin-bottom: 0.4em;
+  font-size: 1.25em;
+}
+
+/* Paragraphs and lists */
+.reveal p {
+  line-height: 1.42;
+}
+
+.reveal ul,
+.reveal ol {
+  display: block;
+  width: auto;
+  margin: 0.5em 0 0.5em 1.15em;
+}
+
+.reveal li {
+  margin: 0.32em 0;
+  line-height: 1.35;
+}
+
+.reveal li::marker {
+  color: var(--accent);
+}
+
+/* Links */
+.reveal a {
+  color: var(--accent);
+}
+
+.reveal a:hover {
+  color: #164f7a;
+}
+
+/* Code cells */
+.reveal pre {
+  width: 100%;
+  margin: 0.6em 0;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  background: #f6f8fa;
+  box-shadow: none;
+}
+
+.reveal pre code {
+  max-height: 470px;
+  padding: 0.8em 1em;
+  font-size: 0.66em;
+  line-height: 1.35;
+}
+
+/* Jupyter input and output areas */
+.reveal .jp-InputArea,
+.reveal .jp-OutputArea,
+.reveal .output_area {
+  margin: 0.4em 0;
+}
+
+.reveal .jp-InputPrompt,
+.reveal .jp-OutputPrompt,
+.reveal .prompt {
+  display: none;
+}
+
+.reveal .jp-OutputArea-output {
+  overflow: auto;
+  max-height: 470px;
+}
+
+/* Tables */
+.reveal table {
+  width: 100%;
+  margin: 0.7em auto;
+  border-collapse: collapse;
+  font-size: 0.72em;
+}
+
+.reveal table th {
+  padding: 0.55em 0.7em;
+  border-bottom: 2px solid var(--accent);
+  background: var(--light-accent);
+  color: var(--primary);
+  font-weight: 650;
+}
+
+.reveal table td {
+  padding: 0.48em 0.7em;
+  border-bottom: 1px solid #d8dee8;
+}
+
+/* Images */
+.reveal img {
+  display: block;
+  max-width: 100%;
+  max-height: 560px;
+  margin: 0.6em auto;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Block quotes */
+.reveal blockquote {
+  width: auto;
+  padding: 0.6em 0.9em;
+  border-left: 5px solid var(--accent);
+  background: var(--light-accent);
+  box-shadow: none;
+  font-style: normal;
+}
+
+/* Fragment animation */
+.reveal .fragment {
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.reveal .fragment:not(.visible) {
+  transform: translateY(8px);
+}
+
+/* Progress bar and controls */
+.reveal .progress {
+  height: 5px;
+  color: var(--accent);
+}
+
+.reveal .controls {
+  color: var(--accent);
+}
+
+/* Center slides explicitly marked with the center class */
+.reveal section.center,
+.reveal section.center h1,
+.reveal section.center h2,
+.reveal section.center p {
+  text-align: center;
+}
+
+/* Better behavior on smaller screens */
+@media (max-width: 900px) {
+  .reveal {
+    font-size: 25px;
+  }
+
+  .reveal .slides section {
+    padding: 25px 32px;
+  }
+}
