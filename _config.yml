@@ -1,4 +1,6 @@
 # Course Configuration
 title: My AML Course Materials
 author: Your Name
-logo: logo.png # Optional
+# logo: logo.png # Optional
+execute:
+  execute_notebooks: "off"
