@@ -20,6 +20,7 @@ import html
 import shutil
 import subprocess
 import sys
+import os
 import re
 
 
@@ -32,6 +33,11 @@ OUTPUT = ROOT / "public"
 # Every generated deck loads this one common stylesheet.
 STYLESHEET_SOURCE = ROOT / "slides.css"
 
+# Empty on root-domain hosts; "/DATA301-AML" on GitHub Pages.
+SITE_BASE = os.environ.get(
+    "SITE_BASE",
+    "",
+).rstrip("/")
 
 def prepare_output_directory() -> None:
     """Clean public and then copy shared static files.
@@ -181,7 +187,10 @@ def enhance_presentation(presentation: Path) -> None:
     )
 
     # Load shared CSS after Reveal's theme.
-    stylesheet_link = '<link rel="stylesheet" href="/slides.css">'
+    stylesheet_link = (
+    f'<link rel="stylesheet" '
+    f'href="{SITE_BASE}/slides.css">'
+)
 
     document = document.replace(
         "</head>",
@@ -215,7 +224,7 @@ def write_index(presentations: list[tuple[Path, Path]]) -> None:
     items = "\n".join(
         f"""
         <li>
-          <a href="/{html.escape(output.relative_to(OUTPUT).as_posix())}">
+          <a href="{SITE_BASE}/{html.escape(output.relative_to(OUTPUT).as_posix())}">
             {html.escape(source.stem.replace("_", " ").replace("-", " ").title())}
           </a>
           <small>{html.escape(source.relative_to(ROOT).as_posix())}</small>
