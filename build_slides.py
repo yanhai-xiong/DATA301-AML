@@ -114,12 +114,9 @@ def enhance_presentation(presentation: Path) -> None:
     """
     document = presentation.read_text(encoding="utf-8")
 
-    def make_list_item_fragment(match: re.Match[str]) -> str:
-        """Add Reveal fragment classes to one opening <li> tag.
-
-        Existing classes are preserved. The transformation is idempotent, so a
-        list item already marked ``fragment`` is not modified a second time.
-        """
+    def make_content_fragment(match: re.Match[str]) -> str:
+        """Add Reveal fragment classes to an opening paragraph or list-item tag."""
+        tag = match.group("tag")
         attributes = match.group("attributes") or ""
 
         class_pattern = re.compile(
@@ -128,16 +125,21 @@ def enhance_presentation(presentation: Path) -> None:
         )
         class_match = class_pattern.search(attributes)
 
+        # Preserve elements explicitly marked as always visible.
         if class_match:
-            classes = class_match.group(2).split()
+            existing_classes = class_match.group(2).split()
 
-            if "fragment" not in classes:
-                classes.extend(["fragment", "fade-up"])
+            if "no-fragment" in existing_classes:
+                return match.group(0)
 
+            if "fragment" not in existing_classes:
+                existing_classes.extend(["fragment", "fade-up"])
+
+                quote = class_match.group(1)
                 replacement = (
-                    f'class={class_match.group(1)}'
-                    f'{" ".join(classes)}'
-                    f'{class_match.group(1)}'
+                    f'class={quote}'
+                    f'{" ".join(existing_classes)}'
+                    f'{quote}'
                 )
 
                 attributes = (
@@ -148,12 +150,13 @@ def enhance_presentation(presentation: Path) -> None:
         else:
             attributes = f' class="fragment fade-up"{attributes}'
 
-        return f"<li{attributes}>"
+        return f"<{tag}{attributes}>"
 
-    # Add Reveal fragment classes to generated HTML list items.
+    # Markdown paragraphs separated by blank lines become separate <p> elements.
+    # List items become <li> elements. Both are turned into Reveal fragments.
     document = re.sub(
-        r"<li(?P<attributes>\s[^>]*)?>",
-        make_list_item_fragment,
+        r"<(?P<tag>p|li)(?P<attributes>\s[^>]*)?>",
+        make_content_fragment,
         document,
         flags=re.IGNORECASE,
     )
