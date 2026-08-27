@@ -30,11 +30,11 @@
 }
 
 .reveal .slides section {
-  position: relative;
-  box-sizing: border-box;
-  padding: 38px 58px;
+/*  position: relative;*/
+/*  box-sizing: border-box;*/
+/*  padding: 38px 58px;*/
   text-align: left;
-  background: transparent;
+/*  background: transparent;*/
 }
 
 /* Reveal owns section dimensions, positioning, and transforms. Setting fixed
