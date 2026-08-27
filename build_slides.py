@@ -114,67 +114,6 @@ def enhance_presentation(presentation: Path) -> None:
     """
     document = presentation.read_text(encoding="utf-8")
 
-    overview_button = r"""
-    <!-- Fixed slide-overview button -->
-    <button
-      id="slide-overview-button"
-      type="button"
-      aria-label="View slide structure"
-      title="View slide structure (O)">
-      <span aria-hidden="true">▦</span>
-      <span>Structure</span>
-    </button>
-
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const button = document.getElementById(
-        "slide-overview-button"
-      );
-
-      if (!button) {
-        return;
-      }
-
-      button.addEventListener("click", event => {
-        // Prevent the click from being interpreted as slide navigation.
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (
-          typeof Reveal !== "undefined" &&
-          typeof Reveal.toggleOverview === "function"
-        ) {
-          Reveal.toggleOverview();
-        }
-      });
-
-      // Update the button text when overview mode opens.
-      if (
-        typeof Reveal !== "undefined" &&
-        typeof Reveal.on === "function"
-      ) {
-        Reveal.on("overviewshown", () => {
-          button.classList.add("overview-active");
-          button.querySelector("span:last-child").textContent =
-            "Close";
-        });
-
-        Reveal.on("overviewhidden", () => {
-          button.classList.remove("overview-active");
-          button.querySelector("span:last-child").textContent =
-            "Structure";
-        });
-      }
-    });
-    </script>
-    """
-
-    document = document.replace(
-        "</body>",
-        f"{overview_button}\n</body>",
-        1,
-    )
-
     def make_content_fragment(match: re.Match[str]) -> str:
         """Add Reveal fragment classes to an opening paragraph or list-item tag."""
         tag = match.group("tag")
@@ -247,6 +186,25 @@ def enhance_presentation(presentation: Path) -> None:
     document = document.replace(
         "</head>",
         f"  {stylesheet_link}\n</head>",
+        1,
+    )
+
+    # Add the fixed Structure button.
+    overview_button = r"""
+    <button
+      id="slide-overview-button"
+      type="button"
+      aria-label="View slide structure"
+      title="View slide structure (O or Esc)"
+      onclick="Reveal.toggleOverview(); return false;">
+      <span aria-hidden="true">▦</span>
+      <span>Structure</span>
+    </button>
+    """
+
+    document = document.replace(
+        "</body>",
+        f"{overview_button}\n</body>",
         1,
     )
 
