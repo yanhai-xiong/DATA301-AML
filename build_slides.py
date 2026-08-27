@@ -64,23 +64,26 @@ for notebook in notebooks:
     # Reveal uses a fixed 16:9 design canvas and scales it to fill the browser.
     # Ordinary Markdown list items become fragments automatically, so notebook
     # authors can keep writing normal Markdown bullets.
+    # This code is inserted immediately before Reveal.initialize(). Fragment
+    # classes must exist before Reveal starts, otherwise Reveal does not index
+    # them and CSS leaves the content permanently hidden.
+    fragment_setup = """
+document.querySelectorAll(".reveal .slides section").forEach((slide) => {
+  if (slide.querySelector(":scope > section")) return;
+
+  let fragmentIndex = 0;
+  slide.querySelectorAll("ul > li, ol > li").forEach((item) => {
+    if (!item.classList.contains("no-fragment")) {
+      item.classList.add("fragment", "fade-up");
+      item.dataset.fragmentIndex = String(fragmentIndex++);
+    }
+  });
+});
+"""
+
     presentation_options = """
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".reveal .slides section").forEach((slide) => {
-    // Ignore the wrapper used by Reveal for a vertical stack. Only actual
-    // leaf slides receive fragments.
-    if (slide.querySelector(":scope > section")) return;
-
-    let fragmentIndex = 0;
-    slide.querySelectorAll("ul > li, ol > li").forEach((item) => {
-      if (!item.classList.contains("no-fragment")) {
-        item.classList.add("fragment", "fade-up");
-        item.dataset.fragmentIndex = String(fragmentIndex++);
-      }
-    });
-  });
-
   Reveal.configure({
     width: 1600,
     height: 900,
@@ -97,6 +100,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 """
+
+    reveal_initializer = "Reveal.initialize("
+    if reveal_initializer not in html_content:
+        raise RuntimeError(f"Reveal initializer not found in {generated_file}")
+
+    html_content = html_content.replace(
+        reveal_initializer,
+        f"{fragment_setup}\n{reveal_initializer}",
+        1,
+    )
 
     html_content = html_content.replace(
         "</head>",
