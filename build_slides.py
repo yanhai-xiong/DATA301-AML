@@ -152,11 +152,21 @@ def enhance_presentation(presentation: Path) -> None:
 
         return f"<{tag}{attributes}>"
 
-    # Markdown paragraphs separated by blank lines become separate <p> elements.
-    # List items become <li> elements. Both are turned into Reveal fragments.
+    # First, make images fragments.
     document = re.sub(
-        r"<(?P<tag>p|li)(?P<attributes>\s[^>]*)?>",
+        r"<(?P<tag>img)(?P<attributes>\s[^>]*)?>",
         make_content_fragment,
+        document,
+        flags=re.IGNORECASE,
+    )
+
+    # Then make paragraphs and list items fragments, except paragraphs that
+    # contain an image. This avoids nested fragments and double keypresses.
+    document = re.sub(
+        r"<p(?P<attributes>\s[^>]*)?>(?!\s*<img\b)",
+        lambda match: make_content_fragment(
+            _paragraph_match(match)
+        ),
         document,
         flags=re.IGNORECASE,
     )
