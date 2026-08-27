@@ -25,7 +25,10 @@
 .reveal {
   color: var(--text);
   font-family: Inter, "Aptos", "Segoe UI", Arial, sans-serif;
-  font-size: 34px;
+
+  /* Scale text with the viewport, with readable minimum and maximum sizes. */
+  font-size: clamp(36px, 2.15vw, 48px);
+
   font-weight: 400;
 }
 

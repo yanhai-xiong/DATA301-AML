@@ -20,6 +20,7 @@ import html
 import shutil
 import subprocess
 import sys
+import re
 
 
 # Netlify runs the build command from the repository root.
@@ -100,26 +101,93 @@ def convert_notebook(notebook: Path) -> Path:
     generated.rename(final)
     return final
 
-
 def enhance_presentation(presentation: Path) -> None:
-    """Add only the shared stylesheet to nbconvert's generated HTML.
+    """Add CSS, responsive canvas settings, and static bullet fragments.
 
-    IMPORTANT: do not rewrite or prepend code to Reveal.initialize here.
-    nbconvert generates a complete, working Reveal initialization script. A
-    JavaScript error inserted before that call prevents Reveal from starting:
-    the first HTML section remains visible, but every later slide is blank.
+    This function performs static text transformations only. It does not insert
+    JavaScript that runs before Reveal.initialize. That distinction matters:
+    an error in injected runtime JavaScript can prevent Reveal from starting.
 
-    Incremental content should therefore be declared in the notebook itself:
-    use cells marked ``fragment`` or write list items with class ``fragment``.
-    Those classes exist in the HTML before nbconvert initializes Reveal.
+    Bullet fragments are written directly into the final HTML. Consequently,
+    Reveal sees them during its normal initialization and handles keyboard
+    navigation without any post-initialization synchronization.
     """
     document = presentation.read_text(encoding="utf-8")
 
-    # Load shared CSS after Reveal's theme so our palette takes precedence.
-    stylesheet_link = '<link rel="stylesheet" href="/slides.css">'
-    document = document.replace("</head>", f"  {stylesheet_link}\n</head>", 1)
-    presentation.write_text(document, encoding="utf-8")
+    def make_list_item_fragment(match: re.Match[str]) -> str:
+        """Add Reveal fragment classes to one opening <li> tag.
 
+        Existing classes are preserved. The transformation is idempotent, so a
+        list item already marked ``fragment`` is not modified a second time.
+        """
+        attributes = match.group("attributes") or ""
+
+        class_pattern = re.compile(
+            r'\bclass=(["\'])(.*?)\1',
+            re.IGNORECASE,
+        )
+        class_match = class_pattern.search(attributes)
+
+        if class_match:
+            classes = class_match.group(2).split()
+
+            if "fragment" not in classes:
+                classes.extend(["fragment", "fade-up"])
+
+                replacement = (
+                    f'class={class_match.group(1)}'
+                    f'{" ".join(classes)}'
+                    f'{class_match.group(1)}'
+                )
+
+                attributes = (
+                    attributes[:class_match.start()]
+                    + replacement
+                    + attributes[class_match.end():]
+                )
+        else:
+            attributes = f' class="fragment fade-up"{attributes}'
+
+        return f"<li{attributes}>"
+
+    # Add Reveal fragment classes to generated HTML list items.
+    document = re.sub(
+        r"<li(?P<attributes>\s[^>]*)?>",
+        make_list_item_fragment,
+        document,
+        flags=re.IGNORECASE,
+    )
+
+    # Add responsive sizing to nbconvert's existing Reveal configuration.
+    initializer = "Reveal.initialize({"
+
+    responsive_options = """Reveal.initialize({
+    width: "100%",
+    height: "100%",
+    margin: 0.025,
+    center: true,"""
+
+    if initializer not in document:
+        raise RuntimeError(
+            f"Reveal initializer not found in {presentation}"
+        )
+
+    document = document.replace(
+        initializer,
+        responsive_options,
+        1,
+    )
+
+    # Load shared CSS after Reveal's theme.
+    stylesheet_link = '<link rel="stylesheet" href="/slides.css">'
+
+    document = document.replace(
+        "</head>",
+        f"  {stylesheet_link}\n</head>",
+        1,
+    )
+
+    presentation.write_text(document, encoding="utf-8")
 
 def write_index(presentations: list[tuple[Path, Path]]) -> None:
     """Generate the root homepage with a link to every slide deck."""
