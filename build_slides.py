@@ -198,14 +198,19 @@ def enhance_presentation(presentation: Path) -> None:
         1,
     )
 
-    # Add the fixed Structure button.
     overview_button = r"""
     <button
       id="slide-overview-button"
       type="button"
       aria-label="View slide structure"
-      title="View slide structure (O or Esc)"
-      onclick="Reveal.toggleOverview(); return false;">
+      title="View slide structure"
+      onpointerdown="event.stopPropagation();"
+      onclick="
+        event.preventDefault();
+        event.stopPropagation();
+        Reveal.toggleOverview();
+        return false;
+      ">
       <span aria-hidden="true">▦</span>
       <span>Structure</span>
     </button>
