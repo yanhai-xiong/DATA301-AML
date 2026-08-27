@@ -152,21 +152,10 @@ def enhance_presentation(presentation: Path) -> None:
 
         return f"<{tag}{attributes}>"
 
-    # First, make images fragments.
+    # Make paragraphs, list items, and images Reveal fragments.
     document = re.sub(
-        r"<(?P<tag>img)(?P<attributes>\s[^>]*)?>",
+        r"<(?P<tag>p|li|img)(?P<attributes>\s[^>]*)?>",
         make_content_fragment,
-        document,
-        flags=re.IGNORECASE,
-    )
-
-    # Then make paragraphs and list items fragments, except paragraphs that
-    # contain an image. This avoids nested fragments and double keypresses.
-    document = re.sub(
-        r"<p(?P<attributes>\s[^>]*)?>(?!\s*<img\b)",
-        lambda match: make_content_fragment(
-            _paragraph_match(match)
-        ),
         document,
         flags=re.IGNORECASE,
     )
