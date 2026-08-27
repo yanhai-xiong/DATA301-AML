@@ -32,19 +32,9 @@
 .reveal .slides section {
   position: relative;
   box-sizing: border-box;
-  padding: 84px 104px 72px;
+  padding: 38px 58px;
   text-align: left;
   background: transparent;
-}
-
-.reveal .slides section::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 13px;
-  content: "";
-  background: linear-gradient(90deg, var(--navy), var(--blue), var(--cyan));
 }
 
 /* Reveal owns section dimensions, positioning, and transforms. Setting fixed

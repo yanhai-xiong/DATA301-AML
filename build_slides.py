@@ -102,72 +102,22 @@ def convert_notebook(notebook: Path) -> Path:
 
 
 def enhance_presentation(presentation: Path) -> None:
-    """Add shared CSS, incremental bullets, and Reveal configuration.
+    """Add only the shared stylesheet to nbconvert's generated HTML.
 
-    Fragment classes are inserted immediately before Reveal.initialize.
-    Reveal must see them during initialization or the browser can hide bullets
-    without registering them for keyboard navigation.
+    IMPORTANT: do not rewrite or prepend code to Reveal.initialize here.
+    nbconvert generates a complete, working Reveal initialization script. A
+    JavaScript error inserted before that call prevents Reveal from starting:
+    the first HTML section remains visible, but every later slide is blank.
 
-    A section containing direct child sections is a vertical-stack wrapper.
-    It is not an actual slide, so it must not receive fragment processing.
+    Incremental content should therefore be declared in the notebook itself:
+    use cells marked ``fragment`` or write list items with class ``fragment``.
+    Those classes exist in the HTML before nbconvert initializes Reveal.
     """
     document = presentation.read_text(encoding="utf-8")
 
     # Load shared CSS after Reveal's theme so our palette takes precedence.
     stylesheet_link = '<link rel="stylesheet" href="/slides.css">'
     document = document.replace("</head>", f"  {stylesheet_link}\n</head>", 1)
-
-    fragment_setup = r"""
-// Make ordinary Markdown bullets appear one at a time.
-document.querySelectorAll(".reveal .slides section").forEach((slide) => {
-  // Ignore Reveal's wrapper around a vertical stack.
-  if (slide.querySelector(":scope > section")) return;
-
-  let sequence = 0;
-  slide.querySelectorAll("ul > li, ol > li").forEach((item) => {
-    // Use class="no-fragment" on an HTML list item to keep it visible.
-    if (item.classList.contains("no-fragment")) return;
-    item.classList.add("fragment", "fade-up");
-    item.dataset.fragmentIndex = String(sequence);
-    sequence += 1;
-  });
-});
-"""
-
-    initializer = "Reveal.initialize("
-    if initializer not in document:
-        raise RuntimeError(f"Reveal initializer not found in {presentation}")
-
-    # Insert into nbconvert's existing JavaScript block before initialization.
-    document = document.replace(
-        initializer,
-        f"{fragment_setup}\n{initializer}",
-        1,
-    )
-
-    configuration = r"""
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  Reveal.configure({
-    // Reveal scales this stable 16:9 canvas to the browser.
-    width: 1600,
-    height: 900,
-    margin: 0.035,
-    minScale: 0.2,
-    maxScale: 2.0,
-    center: true,
-    controls: true,
-    progress: true,
-    hash: true,
-    transition: "fade",
-    backgroundTransition: "fade"
-  });
-});
-</script>
-"""
-
-    # CSS must not override Reveal's section width, height, or transforms.
-    document = document.replace("</body>", f"{configuration}\n</body>", 1)
     presentation.write_text(document, encoding="utf-8")
 
 
