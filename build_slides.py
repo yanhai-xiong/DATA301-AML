@@ -3,8 +3,16 @@ import html
 import shutil
 import subprocess
 
+
 ROOT = Path.cwd()
 OUTPUT = ROOT / "public"
+
+if OUTPUT.exists():
+    shutil.rmtree(OUTPUT)
+
+OUTPUT.mkdir()
+
+shutil.copy2(ROOT / "slides.css", OUTPUT / "slides.css")
 
 # Start with a clean Netlify output directory.
 if OUTPUT.exists():
@@ -52,6 +60,18 @@ for notebook in notebooks:
     generated_file = output_directory / f"{output_name}.slides.html"
     final_file = output_directory / f"{output_name}.html"
     generated_file.rename(final_file)
+
+    # Add the common presentation stylesheet.
+    html_content = final_file.read_text(encoding="utf-8")
+
+    stylesheet = '<link rel="stylesheet" href="/slides.css">'
+
+    html_content = html_content.replace(
+        "</head>",
+        f"  {stylesheet}\n</head>",
+    )
+
+    final_file.write_text(html_content, encoding="utf-8")
 
     presentations.append(
         {
