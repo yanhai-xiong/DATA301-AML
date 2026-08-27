@@ -68,10 +68,15 @@ for notebook in notebooks:
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".reveal .slides section").forEach((slide) => {
-    slide.querySelectorAll("ul > li, ol > li").forEach((item, index) => {
+    // Ignore the wrapper used by Reveal for a vertical stack. Only actual
+    // leaf slides receive fragments.
+    if (slide.querySelector(":scope > section")) return;
+
+    let fragmentIndex = 0;
+    slide.querySelectorAll("ul > li, ol > li").forEach((item) => {
       if (!item.classList.contains("no-fragment")) {
         item.classList.add("fragment", "fade-up");
-        item.dataset.fragmentIndex = String(index + 1);
+        item.dataset.fragmentIndex = String(fragmentIndex++);
       }
     });
   });
@@ -79,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
   Reveal.configure({
     width: 1600,
     height: 900,
-    margin: 0.025,
+    margin: 0,
     minScale: 0.2,
     maxScale: 2.0,
     center: false,
