@@ -160,7 +160,7 @@ def enhance_presentation(presentation: Path) -> None:
 
     # Make paragraphs, list items, and images Reveal fragments.
     document = re.sub(
-        r"<(?P<tag>p|li|img)(?P<attributes>\s[^>]*)?>",
+        r"<(?P<tag>p|li|img|pre)(?P<attributes>\s[^>]*)?>",
         make_content_fragment,
         document,
         flags=re.IGNORECASE,
