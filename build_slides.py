@@ -203,17 +203,99 @@ def enhance_presentation(presentation: Path) -> None:
       id="slide-overview-button"
       type="button"
       aria-label="View slide structure"
-      title="View slide structure"
-      onpointerdown="event.stopPropagation();"
-      onclick="
-        event.preventDefault();
-        event.stopPropagation();
-        Reveal.toggleOverview();
-        return false;
-      ">
+      title="View slide structure">
       <span aria-hidden="true">▦</span>
-      <span>Structure</span>
+      <span id="slide-overview-label">Structure</span>
     </button>
+
+    <script>
+    (() => {
+      function connectOverviewButton() {
+        const button = document.getElementById(
+          "slide-overview-button"
+        );
+
+        /*
+         * Wait until both the button and Reveal API exist.
+         * The script checks again every 100 ms while nbconvert's Reveal
+         * initialization is still loading.
+         */
+        if (
+          !button ||
+          typeof window.Reveal === "undefined" ||
+          typeof window.Reveal.toggleOverview !== "function"
+        ) {
+          window.setTimeout(
+            connectOverviewButton,
+            100
+          );
+
+          return;
+        }
+
+        /*
+         * Prevent this function from registering multiple handlers.
+         */
+        if (button.dataset.overviewConnected === "true") {
+          return;
+        }
+
+        button.dataset.overviewConnected = "true";
+
+        button.addEventListener(
+          "click",
+          event => {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+            /*
+             * Force the state instead of simply toggling blindly.
+             */
+            const shouldOpen =
+              !window.Reveal.isOverview();
+
+            window.Reveal.toggleOverview(
+              shouldOpen
+            );
+          },
+          true
+        );
+
+        const label = document.getElementById(
+          "slide-overview-label"
+        );
+
+        window.Reveal.on(
+          "overviewshown",
+          () => {
+            button.classList.add(
+              "overview-active"
+            );
+
+            if (label) {
+              label.textContent = "Close";
+            }
+          }
+        );
+
+        window.Reveal.on(
+          "overviewhidden",
+          () => {
+            button.classList.remove(
+              "overview-active"
+            );
+
+            if (label) {
+              label.textContent = "Structure";
+            }
+          }
+        );
+      }
+
+      connectOverviewButton();
+    })();
+    </script>
     """
 
     document = document.replace(
