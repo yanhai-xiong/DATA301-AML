@@ -2,6 +2,7 @@ from pathlib import Path
 import html
 import shutil
 import subprocess
+import sys
 
 
 ROOT = Path.cwd()
@@ -10,15 +11,8 @@ OUTPUT = ROOT / "public"
 if OUTPUT.exists():
     shutil.rmtree(OUTPUT)
 
-OUTPUT.mkdir()
-
+OUTPUT.mkdir(parents=True)
 shutil.copy2(ROOT / "slides.css", OUTPUT / "slides.css")
-
-# Start with a clean Netlify output directory.
-if OUTPUT.exists():
-    shutil.rmtree(OUTPUT)
-
-OUTPUT.mkdir()
 
 notebooks = sorted(
     path
@@ -42,7 +36,8 @@ for notebook in notebooks:
 
     subprocess.run(
         [
-            "jupyter",
+            sys.executable,
+            "-m",
             "nbconvert",
             str(notebook),
             "--to",
@@ -51,8 +46,8 @@ for notebook in notebooks:
             output_name,
             "--output-dir",
             str(output_directory),
-            "--SlidesExporter.reveal_theme=white",
-            "--SlidesExporter.reveal_transition=slide",
+            "--SlidesExporter.reveal_theme=simple",
+            "--SlidesExporter.reveal_transition=fade",
         ],
         check=True,
     )
@@ -66,9 +61,45 @@ for notebook in notebooks:
 
     stylesheet = '<link rel="stylesheet" href="/slides.css">'
 
+    # Reveal uses a fixed 16:9 design canvas and scales it to fill the browser.
+    # Ordinary Markdown list items become fragments automatically, so notebook
+    # authors can keep writing normal Markdown bullets.
+    presentation_options = """
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".reveal .slides section").forEach((slide) => {
+    slide.querySelectorAll("ul > li, ol > li").forEach((item, index) => {
+      if (!item.classList.contains("no-fragment")) {
+        item.classList.add("fragment", "fade-up");
+        item.dataset.fragmentIndex = String(index + 1);
+      }
+    });
+  });
+
+  Reveal.configure({
+    width: 1600,
+    height: 900,
+    margin: 0.025,
+    minScale: 0.2,
+    maxScale: 2.0,
+    center: false,
+    controls: true,
+    progress: true,
+    hash: true,
+    transition: "fade",
+    backgroundTransition: "fade"
+  });
+});
+</script>
+"""
+
     html_content = html_content.replace(
         "</head>",
         f"  {stylesheet}\n</head>",
+    )
+    html_content = html_content.replace(
+        "</body>",
+        f"{presentation_options}\n</body>",
     )
 
     final_file.write_text(html_content, encoding="utf-8")
