@@ -222,7 +222,7 @@
 }
 
 /* Fixed button for Reveal's slide overview */
-#slide-overview-button {
+/*#slide-overview-button {
   position: fixed;
   left: 22px;
   bottom: 22px;
@@ -267,4 +267,4 @@
 #slide-overview-button.overview-active {
   color: white;
   background: var(--navy);
-}
+}*/
