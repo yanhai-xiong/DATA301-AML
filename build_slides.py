@@ -296,7 +296,7 @@ def enhance_presentation(presentation: Path) -> None:
     #   connectOverviewButton();
     # })();
     # </script>
-    """
+    # """
 
     document = document.replace(
         "</body>",
