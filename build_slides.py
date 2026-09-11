@@ -198,105 +198,105 @@ def enhance_presentation(presentation: Path) -> None:
         1,
     )
 
-    # overview_button = r"""
-    # <button
-    #   id="slide-overview-button"
-    #   type="button"
-    #   aria-label="View slide structure"
-    #   title="View slide structure">
-    #   <span aria-hidden="true">▦</span>
-    #   <span id="slide-overview-label">Structure</span>
-    # </button>
+    overview_button = r"""
+    <button
+      id="slide-overview-button"
+      type="button"
+      aria-label="View slide structure"
+      title="View slide structure">
+      <span aria-hidden="true">▦</span>
+      <span id="slide-overview-label">Structure</span>
+    </button>
 
-    # <script>
-    # (() => {
-    #   function connectOverviewButton() {
-    #     const button = document.getElementById(
-    #       "slide-overview-button"
-    #     );
+    <script>
+    (() => {
+      function connectOverviewButton() {
+        const button = document.getElementById(
+          "slide-overview-button"
+        );
 
-    #     /*
-    #      * Wait until both the button and Reveal API exist.
-    #      * The script checks again every 100 ms while nbconvert's Reveal
-    #      * initialization is still loading.
-    #      */
-    #     if (
-    #       !button ||
-    #       typeof window.Reveal === "undefined" ||
-    #       typeof window.Reveal.toggleOverview !== "function"
-    #     ) {
-    #       window.setTimeout(
-    #         connectOverviewButton,
-    #         100
-    #       );
+        /*
+         * Wait until both the button and Reveal API exist.
+         * The script checks again every 100 ms while nbconvert's Reveal
+         * initialization is still loading.
+         */
+        if (
+          !button ||
+          typeof window.Reveal === "undefined" ||
+          typeof window.Reveal.toggleOverview !== "function"
+        ) {
+          window.setTimeout(
+            connectOverviewButton,
+            100
+          );
 
-    #       return;
-    #     }
+          return;
+        }
 
-    #     /*
-    #      * Prevent this function from registering multiple handlers.
-    #      */
-    #     if (button.dataset.overviewConnected === "true") {
-    #       return;
-    #     }
+        /*
+         * Prevent this function from registering multiple handlers.
+         */
+        if (button.dataset.overviewConnected === "true") {
+          return;
+        }
 
-    #     button.dataset.overviewConnected = "true";
+        button.dataset.overviewConnected = "true";
 
-    #     button.addEventListener(
-    #       "click",
-    #       event => {
-    #         event.preventDefault();
-    #         event.stopPropagation();
-    #         event.stopImmediatePropagation();
+        button.addEventListener(
+          "click",
+          event => {
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
 
-    #         /*
-    #          * Force the state instead of simply toggling blindly.
-    #          */
-    #         const shouldOpen =
-    #           !window.Reveal.isOverview();
+            /*
+             * Force the state instead of simply toggling blindly.
+             */
+            const shouldOpen =
+              !window.Reveal.isOverview();
 
-    #         window.Reveal.toggleOverview(
-    #           shouldOpen
-    #         );
-    #       },
-    #       true
-    #     );
+            window.Reveal.toggleOverview(
+              shouldOpen
+            );
+          },
+          true
+        );
 
-    #     const label = document.getElementById(
-    #       "slide-overview-label"
-    #     );
+        const label = document.getElementById(
+          "slide-overview-label"
+        );
 
-    #     window.Reveal.on(
-    #       "overviewshown",
-    #       () => {
-    #         button.classList.add(
-    #           "overview-active"
-    #         );
+        window.Reveal.on(
+          "overviewshown",
+          () => {
+            button.classList.add(
+              "overview-active"
+            );
 
-    #         if (label) {
-    #           label.textContent = "Close";
-    #         }
-    #       }
-    #     );
+            if (label) {
+              label.textContent = "Close";
+            }
+          }
+        );
 
-    #     window.Reveal.on(
-    #       "overviewhidden",
-    #       () => {
-    #         button.classList.remove(
-    #           "overview-active"
-    #         );
+        window.Reveal.on(
+          "overviewhidden",
+          () => {
+            button.classList.remove(
+              "overview-active"
+            );
 
-    #         if (label) {
-    #           label.textContent = "Structure";
-    #         }
-    #       }
-    #     );
-    #   }
+            if (label) {
+              label.textContent = "Structure";
+            }
+          }
+        );
+      }
 
-    #   connectOverviewButton();
-    # })();
-    # </script>
-    # """
+      connectOverviewButton();
+    })();
+    </script>
+    """
 
     document = document.replace(
         "</body>",
