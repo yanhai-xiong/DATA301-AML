@@ -199,14 +199,14 @@ def enhance_presentation(presentation: Path) -> None:
     )
 
     overview_button = r"""
-    <button
-      id="slide-overview-button"
-      type="button"
-      aria-label="View slide structure"
-      title="View slide structure">
-      <span aria-hidden="true">▦</span>
-      <span id="slide-overview-label">Structure</span>
-    </button>
+    # <button
+    #   id="slide-overview-button"
+    #   type="button"
+    #   aria-label="View slide structure"
+    #   title="View slide structure">
+    #   <span aria-hidden="true">▦</span>
+    #   <span id="slide-overview-label">Structure</span>
+    # </button>
 
     <script>
     (() => {
