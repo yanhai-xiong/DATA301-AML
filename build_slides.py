@@ -199,14 +199,6 @@ def enhance_presentation(presentation: Path) -> None:
     )
 
     overview_button = r"""
-    # <button
-    #   id="slide-overview-button"
-    #   type="button"
-    #   aria-label="View slide structure"
-    #   title="View slide structure">
-    #   <span aria-hidden="true">▦</span>
-    #   <span id="slide-overview-label">Structure</span>
-    # </button>
 
     <script>
     (() => {
@@ -279,18 +271,18 @@ def enhance_presentation(presentation: Path) -> None:
           }
         );
 
-        window.Reveal.on(
-          "overviewhidden",
-          () => {
-            button.classList.remove(
-              "overview-active"
-            );
+        #: window.Reveal.on(
+        #:   "overviewhidden",
+        #:   () => {
+        #:     button.classList.remove(
+        #:       "overview-active"
+        #:     );
 
-            if (label) {
-              label.textContent = "Structure";
-            }
-          }
-        );
+        #:     if (label) {
+        #:       label.textContent = "Structure";
+        #:     }
+        #:   }
+        #: );
       }
 
       connectOverviewButton();
